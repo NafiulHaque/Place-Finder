@@ -3,7 +3,7 @@ import Input from "../../shared/components/FormElements/Input";
 
 import Button from '../../shared/components/FormElements/Button'
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/components/util/validators";
-import './NewPlace.css';
+import './PlaceForm.css';
 
 
 
@@ -41,6 +41,10 @@ const NewPlace = () => {
                 isValid: false
             },
             description: {
+                value: '',
+                isValid: false
+            },
+            address: {
                 value: '',
                 isValid: false
             },
