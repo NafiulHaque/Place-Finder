@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../shared/components/contex/auth-contex";
 
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input";
@@ -13,6 +14,8 @@ import {
 import './Auth.css';
 
 const Auth = () => {
+
+    const auth = useContext(AuthContext);
 
     const [isLoginMode, setLoginMode] = useState(true);
 
@@ -54,6 +57,7 @@ const Auth = () => {
     const authSubmitHandler = event => {
         event.preventDefault();
         console.log(formState.inputs);
+        auth.login();
     }
     return <Card className="authentication">
         <h2>Login Required</h2>
