@@ -18,7 +18,7 @@ const DAMMY_PLACES = [
             lat: 40.748,
             lng: -73.98
         },
-        creator: "u1"
+        creator: "u7"
     },
     {
         id: 'p2',

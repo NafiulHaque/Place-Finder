@@ -1,40 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
-
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 
 import PlaceList from "../components/PlaceList";
 
-const DAMMY_PLACES = [
-    {
-        id: 'p1',
-        title: 'Empire State Building',
-        description: 'One of the most famous sky screapers in the world',
-        imageUrl: 'https://firebasestorage.googleapis.com/v0/b/myapp-c3e74.appspot.com/o/5afe8b46c08ca750f1040f62896545a5c-f1xd-w1020_h770_q80.jpg?alt=media&token=ecb1893a-f412-44ab-bfd6-dba76144fd38',
-        address: '20 W 34th St, New York, NY 10001',
-        location: {
-            lat: 40.748,
-            lng: -73.98
-        },
-        creator: "u1"
-    },
-    {
-        id: 'p2',
-        title: 'Empire State Building',
-        description: 'One of the most famous sky screapers in the world',
-        imageUrl: 'https://firebasestorage.googleapis.com/v0/b/myapp-c3e74.appspot.com/o/5afe8b46c08ca750f1040f62896545a5c-f1xd-w1020_h770_q80.jpg?alt=media&token=ecb1893a-f412-44ab-bfd6-dba76144fd38',
-        address: '20 W 34th St, New York, NY 10001',
-        location: {
-            lat: 40.748,
-            lng: -73.98
-        },
-        creator: "u2"
-    },
 
-]
 const UserPlaces = () => {
+    const [loadedPlaces, setLoadedPlaces] = useState();
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
     const userId = useParams().userId;
-    const loadedPlaces = DAMMY_PLACES.filter(place => place.creator === userId);
-    return <PlaceList items={loadedPlaces} />;
+
+    useEffect(() => {
+        const fetchPlaces = async () => {
+            try {
+                const responseData = await sendRequest(
+                    `http://localhost:5000/api/places/user/${userId}`
+                );
+                setLoadedPlaces(responseData.places);
+            } catch (err) { }
+        }
+        fetchPlaces();
+    }, [sendRequest, userId]);
+    // const loadedPlaces = DAMMY_PLACES.filter(place => place.creator === userId);
+    return (
+        <React.Fragment>
+            <ErrorModal error={error} onClear={clearError} />
+            {isLoading && (
+                <div className="center">
+                    <LoadingSpinner />
+                </div>
+            )}
+            {!isLoading && loadedPlaces && <PlaceList items={loadedPlaces} />}
+        </React.Fragment>
+    )
+
 };
 
 export default UserPlaces;
