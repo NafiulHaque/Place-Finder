@@ -6,8 +6,12 @@ import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
 import './PlaceItem.css';
 import { AuthContext } from "../../shared/components/contex/auth-contex";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 const PlaceItem = props => {
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
     const auth = useContext(AuthContext);
     const [showMap, setShowMap] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -26,11 +30,19 @@ const PlaceItem = props => {
         setShowConfirmModal(false);
     }
 
-    const confirmDeleteHandler = () => {
+    const confirmDeleteHandler = async () => {
         setShowConfirmModal(false);
-        console.log("Deleting......");
+        try {
+            await sendRequest(
+                `http://localhost:5000/api/places/${props.id}`,
+                'DELETE'
+            );
+            props.onDelete(props.id);
+        } catch (err) { }
+
     }
     return <React.Fragment>
+        <ErrorModal error={error} onCancel={clearError} />
         <Modal
             show={showMap}
             onCancel={closeMapHandler}
@@ -58,6 +70,7 @@ const PlaceItem = props => {
             <p>Do you want to proceed and delete this Place?</p>
         </Modal>
         <li className="place-item">
+            {isLoading && <LoadingSpinner asOverlay />}
             <Card className="place-item__content">
                 <div className="place-item__image">
                     <img src={props.image} alt={props.title} />
