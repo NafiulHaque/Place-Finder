@@ -10,10 +10,11 @@ import { AuthContext } from "../../shared/components/contex/auth-contex";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ImageUpload from "../../shared/components/FormElements/ImageUpload";
+import { useHistory } from "react-router";
 
 
 
-
+const history = useHistory();
 
 const NewPlace = () => {
     const auth = useContext(AuthContext);
@@ -57,8 +58,12 @@ const NewPlace = () => {
             await sendRequest(
                 'http://localhost:5000/api/places',
                 'POST',
-                formData
+                formData,
+                {
+                    Authorization: 'Bearer' + auth.token
+                }
             );
+            history.push('/');
             //redirect the user to a different page
         } catch (err) {
 
