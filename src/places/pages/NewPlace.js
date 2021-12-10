@@ -14,9 +14,8 @@ import { useHistory } from "react-router";
 
 
 
-const history = useHistory();
-
 const NewPlace = () => {
+    const history = useHistory();
     const auth = useContext(AuthContext);
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
     const [formState, inputHandler] = useForm({
@@ -60,7 +59,7 @@ const NewPlace = () => {
                 'POST',
                 formData,
                 {
-                    Authorization: 'Bearer' + auth.token
+                    Authorization: 'Bearer ' + auth.token
                 }
             );
             history.push('/');
